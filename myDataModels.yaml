@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydatamodels-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mdm-app
+  template:
+    metadata:
+      labels:
+        app: mdm-app
+    spec:
+      containers:
+        - name: my-data-models-app
+          image: mydatamodelsacr.azurecr.io/my-data-model-app:1.0
+          ports:
+            - containerPort: 5000
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mydatamodels-svc
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 5000
+  selector:
+    app: mdm-app
